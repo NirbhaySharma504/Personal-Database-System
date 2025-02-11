@@ -1,0 +1,3 @@
+1) while creating the structre which is stored in the db, never use POINTERS as while fwrite, if we give the pointer to the sturct, and do sizeof, the pointer to the data will be stored and not the data(although arrays can be stored even if they are just pointeers to starting of the array)
+
+2) fopen fread fseek fwrite
