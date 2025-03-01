@@ -86,7 +86,6 @@ int pds_open_db( char *dbname ){
     }
     repo_handle.repo_status = PDS_DB_OPEN;
     repo_handle.num_tables=0;
-    FILE *files = fopen();
     return PDS_SUCCESS;
 }
 
@@ -128,23 +127,16 @@ struct PDS_TableInfo *helper_get_table_info( char *table_name ){
 // PDS_SUCCESS - function completes without any error
 //
 // [OLD PROTOTYPE] int pds_create(char *repo_name);
-int pds_create_table( char *table_name, int rec_size){
+int pds_create_table( char *table_name ){
     if(repo_handle.repo_status!=PDS_DB_OPEN){
         return PDS_DB_NOT_OPEN;
     }
-    struct PDS_TableInfo *handle = helper_get_table_info(table_name);
-    char data_file[50],ndx_file[50],db_file[50] ;
+    
+    char data_file[50],ndx_file[50];
     strcpy(data_file,table_name);
-    strcpy(db_file,repo_handle.pds_repo_name);
-    strcat(db_file,".info");
     strcat(data_file,".dat");
     strcpy(ndx_file,table_name);
     strcat(ndx_file,".ndx");
-    if(handle==NULL){
-        FILE *fp = fopen(db_file,"a");
-        fwrite(table_name,rec_size,1,fp);
-        fclose(fp);
-    }
     FILE *fp=fopen(data_file,"wb+");
     if(fp==NULL){
         return PDS_FILE_ERROR;

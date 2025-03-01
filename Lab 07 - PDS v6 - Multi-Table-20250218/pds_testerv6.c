@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 void process_line( char *test_case )
 {
 	char command[30], param1[30], param2[30], param3[30], param4[30];
-	char dbname[30], table_name[30], search_string[30], info[1024];
+	char dbname[50], table_name[50], search_string[100], info[1024];
 	int contact_id, rec_size_contact;
 	int student_id, rec_size_student;
     int pds_status, expected_status;
@@ -127,8 +127,8 @@ void process_line( char *test_case )
 		else if( !strcmp(table_name, "student")){
 			sscanf(param2, "%d", &student_id);
 			testStudent.student_id = student_id;
-			sprintf(testStudent.student_name, "Name-of-Student-%d",contact_id);
-			sprintf(testStudent.degree_name, "Degree-of-Student-%d",contact_id);		
+			sprintf(testStudent.student_name, "Name-of-Student-%d",student_id);
+			sprintf(testStudent.degree_name, "Degree-of-Student-%d",student_id);		
 			pds_status = put_rec_by_key( table_name, student_id, &testStudent );
 		}
 		if( pds_status == expected_status ){
@@ -213,14 +213,15 @@ void process_line( char *test_case )
 	}
 	else if( !strcmp(command,"CONTACT-NAME-SEARCH") )
 	{
-		char contact_name[30], expected_name[30], expected_phone[30];
+		char contact_name[100], expected_name[100], expected_phone[100];
 		int expected_comp_count, actual_comp_count;
 		
-		sscanf(param1, "%s", table_name);
-		sscanf(param2, "%s", contact_name);
-		sscanf(param3, "%d", &expected_comp_count);
+		strcpy(table_name, "contact");
+		sscanf(param1, "%s", contact_name);
+		sscanf(param2, "%d", &expected_comp_count);
 		testContact.contact_id = -1;
 		actual_comp_count = -1;
+
 		pds_status = get_rec_by_field( table_name, contact_name, &testContact, contact_name_matcher, &actual_comp_count );
 		if( pds_status != expected_status )
 		{
@@ -236,9 +237,10 @@ void process_line( char *test_case )
 			// Check if the retrieved values match
 			// Check if num block accesses match too
 			// Extract the expected contact_id from the phone number
-			sscanf(contact_name+sizeof("Name-of"), "%d", &contact_id);
-			sprintf(expected_name,"Name-of-%d",contact_id);
-			sprintf(expected_phone,"Phone-of-%d",contact_id);
+			sscanf(contact_name+sizeof("Name-of-Contact"), "%d", &contact_id);
+			
+			sprintf(expected_name,"Name-of-Contact-%d",contact_id);
+			sprintf(expected_phone,"Phone-of-Contact-%d",contact_id);
 			if (testContact.contact_id == contact_id && 
 				strcmp(testContact.contact_name, expected_name) == 0 &&
 				strcmp(testContact.phone, expected_phone) == 0 )
