@@ -1,0 +1,22 @@
+have 3 use cases
+have a database to implement those operations with minimum of 4 tables
+
+-instant transfer of cash (user updated, logged)
+-schedule transfer to later dates(dates have to be greater than current) add to log table, db check everytime at 12:00 and runs the db
+-manager view
+
+Usecase template:
+
+Name: Instant Transfer Fund
+Actor: Customer
+Action: Transfers funds between 2 accounts in the same bank account(assuming instant transfer)
+
+Name: Schedule Transfers
+Actor: Customer
+Action: Schedules the transaction to a later date by logging the details to a log table. 
+        The program checks pending transactions at 12:00 everyday
+
+Name: Provide admin view of all internal Transfers
+Actor: Bank Admin
+Action: Provides a view of all transfers, can filter by date,user,amount or status
+

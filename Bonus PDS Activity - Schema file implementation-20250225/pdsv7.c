@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "pdsv6.h"
+#include "pdsv7.h"
 #include "contact.h"
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -126,16 +126,9 @@ int pds_open_db(char *dbname) {
             fclose(fp);
             return PDS_FILE_ERROR;
         }
-        
-        // Initialize other fields
-        table_info.table_status = PDS_TABLE_CLOSED;
-        table_info.data_fp = NULL;
-        table_info.ndx_fp = NULL;
-        table_info.ndx_root = NULL;
-        table_info.rec_count = 0;
-        
-        // Add table info to repo_handle
         repo_handle.tables[i] = table_info;
+        
+        pds_open_table(table_info.table_name,table_info.rec_size);
     }
     
     fclose(fp);
@@ -178,7 +171,7 @@ int pds_create_table(char *table_name, int rec_size) {
     
     // Check if table already exists
     if(helper_get_table_info(table_name) != NULL) {
-        return PDS_;
+        return PDS_SUCCESS;
     }
     
     char data_file[50], ndx_file[50];
@@ -239,7 +232,7 @@ int pds_create_table(char *table_name, int rec_size) {
     fwrite(&table_info.rec_size, sizeof(int), 1, fp);
     
     fclose(fp);
-    
+    pds_open_table(table_name,rec_size);
     return PDS_SUCCESS;
 }
 
